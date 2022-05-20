@@ -7,9 +7,9 @@ const Footer = () =>{
         <Box sx={{
             backgroundColor:theme.palette.primary.main,
             width:'100%',
-            position: 'absolute',
-            marginTop: 'calc(5% + 60px)',
-            bottom:0,
+            //position: 'sticky',
+            //marginTop: 'calc(5% + 60px)',
+            //bottom:0,
             display:'flex',
             alignContent:'center',
             justifyContent:'center',
