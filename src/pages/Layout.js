@@ -1,94 +1,91 @@
-import { AppBar, Button, Drawer, Grid, IconButton, Toolbar, Link } from '@mui/material';
-import { styled, alpha } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import InputBase from '@mui/material/InputBase';
-import SearchIcon from '@mui/icons-material/Search';
+import { Grid, useMediaQuery, useTheme, Box, Typography,IconButton,Menu, MenuItem } from '@mui/material';
 import * as React from 'react';
-import ReactDOM from 'react-dom';
 import { Outlet } from "react-router-dom";
-import HomeIcon from '@mui/icons-material/Home';
+import SimpleBreadcrumbs from '../components/SimpleBreadcrumbs';
+import Navbar from '../components/NavBar';
+import Footer from '../components/Footer';
+import MenuIcon from '@mui/icons-material/Menu';
 
-const Search = styled('div')(({ theme }) => ({
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.common.white, 0.15),
-    '&:hover': {
-        backgroundColor: alpha(theme.palette.common.white, 0.25),
-    },
-    marginLeft: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-        marginLeft: theme.spacing(1),
-        width: 'auto',
-    },
-}));
-
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-    padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-    color: 'inherit',
-    '& .MuiInputBase-input': {
-        padding: theme.spacing(1, 1, 1, 0),
-        // vertical padding + font size from searchIcon
-        paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-        transition: theme.transitions.create('width'),
-        width: '100%',
-        [theme.breakpoints.up('sm')]: {
-            width: '12ch',
-            '&:focus': {
-                width: '20ch',
-            },
-        },
-    },
-}));
-
-const Navbar = () => {
+const MenuTCU = () => {
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event) => {
+      setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+      setAnchorEl(null);
+    };
+  
     return (
-        <AppBar position='static'>
-            <Toolbar>
-                <IconButton
-                    size='large'
-                    edge='start'
-                    color='inherit'
-                    aria-label='home'
-                    sx={{ mr: 2 }}
-                >
-                    <HomeIcon />
-                </IconButton>
-                <Link marginX={1} fontWeight='bold' variant='inherit' underline='none' color='inherit'>FIEAM</Link>
-                <Link marginX={1} fontWeight='bold' variant='inherit' underline='none' color='inherit'>SESI</Link>
-                <Link marginX={1} fontWeight='bold' variant='inherit' underline='none' color='inherit'>SENAI</Link>
-                <Link marginX={1} fontWeight='bold' variant='inherit' underline='none' color='inherit'>IEL</Link>
-                <Grid container justifyContent={'flex-end'}>
-                    <Search>
-                        <SearchIconWrapper>
-                            <SearchIcon />
-                        </SearchIconWrapper>
-                        <StyledInputBase
-                            placeholder="Busca"
-                            inputProps={{ 'aria-label': 'busca' }}
-                        />
-                    </Search>
-                </Grid>
-            </Toolbar>
-        </AppBar>
+      <div>
+        <IconButton
+          id="basic-button"
+          aria-controls={open ? 'basic-menu' : undefined}
+          aria-haspopup="true"
+          aria-expanded={open ? 'true' : undefined}
+          onClick={handleClick}
+          sx={{display:{xl:'block', xs:'none'}}}
+        >
+        <MenuIcon/>Prestação de contas TCU
+        </IconButton>
+        <Menu
+          id="basic-menu"
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+          MenuListProps={{
+            'aria-labelledby': 'basic-button',
+          }}
+        >
+          <MenuItem onClick={handleClose}>Profile</MenuItem>
+          <MenuItem onClick={handleClose}>My account</MenuItem>
+          <MenuItem onClick={handleClose}>Logout</MenuItem>
+        </Menu>
+      </div>
     );
-}
+  }
 
 const Layout = () => {
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('md'));   
+
     return (
         <>
             <Navbar />
-            <Outlet />
+            <Grid container columnSpacing={{xs:0,md:0}} marginY={3} direction='row' justifyContent="space-evenly" alignItems="stretch">
+                <Grid item xs={10} md={7} >
+                    <Grid container direction={'column'} >
+                        <Grid container direction={'row'} justifyContent='space-between'>
+                            <Typography sx={{marginBottom:2}} variant='h4'>Transparencia SESI</Typography>
+                            <MenuTCU/>
+                        </Grid>
+                        <Grid item>
+                            <Box
+                                sx={{
+                                    'background-color' : theme.palette.primary.secondary,
+                                    'borderRadius' : '5px',
+                                    'padding' : [2,1,2,1],
+                                }}
+                            >
+                                <SimpleBreadcrumbs/>
+                            </Box>   
+                        </Grid>                    
+                        <Grid item>
+                            <Outlet />
+                        </Grid>
+                    </Grid>
+                </Grid>
+                <Grid sx={{display:{md:'flex', xs:'none'}}} xs={'auto'}>
+                    <h1>MENU</h1>
+                    <ul>
+                        <li>ITEM</li>
+                        <li>ITEM</li>
+                        <li>ITEM</li>
+                        <li>ITEM</li>
+                    </ul>
+                </Grid>
+            </Grid>
+            <Footer/>
         </>
     );
 }
